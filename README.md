@@ -11,7 +11,7 @@
 usage:
 
 ```
-git clone https://github.com/cheenwe/pbs.git
+git clone https://github.com/654060747/project-python.git
 
 cp config.ini.example config.ini
 ```
