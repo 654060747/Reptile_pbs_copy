@@ -22,7 +22,7 @@ daili = {
     'http':'http://27.17.45.90:43411',
 }
 
-COOKIE = 'cy=1; cye=shanghai; _lxsdk_cuid=16938f9a6d9c8-05f60982781ead-414f0c2a-1fa400-16938f9a6d9c8; _lxsdk=16938f9a6d9c8-05f60982781ead-414f0c2a-1fa400-16938f9a6d9c8; _hc.v=88d5ae19-7073-2cf8-07c9-167d6b476292.1551439079; _dp.ac.v=595e6a10-6bc9-4bd6-bafe-407d36b02a65; ctu=eec2323cade50d7a0263c59259c00cd037262a08b51e5d6eaac81a4338ef0517; _lx_utm=utm_source%3DBaidu%26utm_medium%3Dorganic; s_ViewType=10; dper=a50a97542609e7a8958e5e260f74debc7575e4823232d0931131382aeadfc7b99735c4f6ac85a412315d813f214201705b65e7d4a27221412e324b4efe9045a2f4cdd1e18b577f953b88b8e583b5afd5c139283419bc82b10ae819ffa5a1f2f3; ua=dpuser_4772089894; uamo=18321298725; ll=7fd06e815b796be3df069dec7836c3df; _lxsdk_s=16942f6c950-58d-396-c7%7C%7C89'
+COOKIE = 'xxx'
 
 # 随机产生User-Agent
 ua = UserAgent()
