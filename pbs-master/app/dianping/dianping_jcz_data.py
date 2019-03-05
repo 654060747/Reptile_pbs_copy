@@ -20,10 +20,19 @@ lgtoken = ElementProxyGetCookie().get('lgtoken')
 print(lgtoken)
 
 
+<<<<<<< HEAD
 # daili = {
 #     'http':'http://27.17.45.90:43411',
 # }
 COOKIE = 'cy=1; cye=shanghai; _lxsdk_cuid=169425426d455-0048b06f7bdea1-6b111b7e-1fa400-169425426d5c8; _lxsdk=169425426d455-0048b06f7bdea1-6b111b7e-1fa400-169425426d5c8; _hc.v=8aa962dd-2d6b-ecdf-dcc0-e2a1f3b4114e.1551596006; s_ViewType=10; ctu=eec2323cade50d7a0263c59259c00cd05d6842c451656cadb1685908aece1e77; _dp.ac.v=3b4a9bfc-f35b-4e14-ad4f-ff09246e69fe; _lx_utm=utm_source%3DBaidu%26utm_medium%3Dorganic; vivi8dd=y; dkwlsn3=y; lgtoken='+lgtoken+'; dper=a50a97542609e7a8958e5e260f74debc928f3475defc60fc5a5ebc5fdbaed73e34023e4eb80b03d7d69785522c5be327519b09cce8483c636e5250285641c0b40316369be98cc7beab4b490d384f4eeb218c49694870c092024a356248ec85d9; ll=7fd06e815b796be3df069dec7836c3df; ua=dpuser_4772089894; uamo=18321298725; _lxsdk_s=16949757f9e-41c-f34-94f%7C%7C62'
+=======
+
+daili = {
+    'http':'http://27.17.45.90:43411',
+}
+
+COOKIE = 'xxx'
+>>>>>>> 09958babb656ff18242b6390071c7fb5e97d7928
 
 # 随机产生User-Agent
 ua = UserAgent()
