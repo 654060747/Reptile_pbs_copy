@@ -46,8 +46,8 @@ def ElementProxyGetCookie():
 
 	# 密码方式
 	driver.find_element_by_id("tab-account").click()
-	driver.find_element_by_id("account-textbox").send_keys('18321298725')
-	driver.find_element_by_id("password-textbox").send_keys('em18321298725')
+	driver.find_element_by_id("account-textbox").send_keys('xxx')
+	driver.find_element_by_id("password-textbox").send_keys('xxx')
 
 	driver.find_element_by_id("login-button-account").click()
 	driver.switch_to.default_content()
