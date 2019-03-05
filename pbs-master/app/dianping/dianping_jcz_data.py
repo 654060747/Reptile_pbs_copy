@@ -19,6 +19,7 @@ from dianping_phone_time import number_dict
 lgtoken = ElementProxyGetCookie().get('lgtoken')
 print(lgtoken)
 
+
 # daili = {
 #     'http':'http://27.17.45.90:43411',
 # }
