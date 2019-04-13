@@ -97,7 +97,7 @@ def car_baoyang(char,driver):
 	letter = data.select("#div2 > li:nth-child("+str(char)+")")[0].getText()
 	print(letter+"字母下车数量:::"+str(lengh_car))
 
-	for i in range(5,lengh_car+1):
+	for i in range(1,lengh_car+1):
 		# 车logo
 		car_pic = data.select("#CarBrands > ul > li:nth-child("+str(i)+") > img")[0].get("src")
 		print(car_pic)
