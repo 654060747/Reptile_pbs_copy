@@ -128,3 +128,26 @@ def by_tuhu_baoyang():
 
 by_tuhu_baoyang()
 
+
+
+# 三级目录为None时Bug优化
+car_pailiang = data.select("#div5 > ul > li")
+car_pl_one = car_pailiang[0].get("data-pailiang")
+# print(car_pl_one)
+if car_pl_one == None:
+	data_(driver)
+	driver.find_element_by_id("reSelectCar").click()
+	time.sleep(2)
+	driver.find_element_by_css_selector("#div2 > li:nth-child("+str(char)+")").click()
+	time.sleep(2)
+	driver.find_element_by_css_selector("#CarBrands > ul > li:nth-child("+str(count)+")").click()
+	time.sleep(1)
+
+if car_pl_one != None:
+	# 得到排量
+	car_pl(data,driver,car_lx_one,car_pic,car,car_xh)
+	# 跳回点击品牌车型
+	driver.find_element_by_css_selector("#div40 > div:nth-child(3) > div.CarHistoryTitleDel").click()
+	time.sleep(1)
+			
+
