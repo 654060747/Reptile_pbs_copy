@@ -35,14 +35,14 @@ def car_nf(data,driver,car_lx_one,car_pl_one,car_pic,car,car_xh):
 	for x in car_nianfen_list:
 		# 车年份
 		car_nf_one = x.get("data-nian")
-		print(car_nf_one)
+		# print(car_nf_one)
 		# url
 		url = "https://by.tuhu.cn/baoyang/"+car_lx_one+"/pl"+car_pl_one+"-n"+car_nf_one+".html"
 		print(car_pic+","+car+","+car_xh+","+url)
 		# write_file(car_pic,car,car_xh,url)
 		# print("==========写入CSV成功===========")
 		# 调用模块拿数据
-		by_tuhu_baoyang_data(url)
+		# by_tuhu_baoyang_data(url)
 
 
 def car_pl(data,driver,car_lx_one,car_pic,car,car_xh):
@@ -51,7 +51,7 @@ def car_pl(data,driver,car_lx_one,car_pic,car,car_xh):
 	for x in car_pailiang:
 		# 车排量
 		car_pl_one = x.get("data-pailiang")
-		print(car_pl_one)
+		# print(car_pl_one)
 		i = i+1
 		driver.find_element_by_css_selector("#div5 > ul >li:nth-child("+str(i)+")").click()
 		data = data_(driver)
@@ -64,27 +64,46 @@ def car_pl(data,driver,car_lx_one,car_pic,car,car_xh):
 			
 
 
-def car_lx(data,driver,car_pic,car):
+def car_lx(char,count,data,driver,car_pic,car):
 	car_leixing_list = data.select('#div5 > ul >li')
 	# print(car_leixing_list)
 	i = 0
 	for x in car_leixing_list:
 		i = i+1
+		# if x.get("data-id") != None and i > 17:
 		if x.get("data-id") != None:
 			# url参数
 			car_lx_one = x.get("data-id")
-			print(car_lx_one)
+			# print(car_lx_one)
 			# 车型号
 			car_xh = x.getText()
-			print(car_xh)
+			# print(car_xh)
+
 			driver.find_element_by_css_selector("#div5 > ul >li:nth-child("+str(i)+")").click()
 			data = data_(driver)
-			# 得到排量
-			car_pl(data,driver,car_lx_one,car_pic,car,car_xh)
 
-			# 跳回点击品牌车型
-			driver.find_element_by_css_selector("#div40 > div:nth-child(3) > div.CarHistoryTitleDel").click()
-			time.sleep(1)
+			car_pailiang = data.select("#div5 > ul > li")
+			car_pl_one = car_pailiang[0].get("data-pailiang")
+			# print(car_pl_one)
+			if car_pl_one == None:
+				data_(driver)
+				driver.find_element_by_id("reSelectCar").click()
+				time.sleep(2)
+				driver.find_element_by_css_selector("#div2 > li:nth-child("+str(char)+")").click()
+				time.sleep(2)
+				driver.find_element_by_css_selector("#CarBrands > ul > li:nth-child("+str(count)+")").click()
+				time.sleep(1)
+				url = "https://by.tuhu.cn/baoyang/"+car_lx_one+"/pl-n.html"
+				print(car_pic+","+car+","+car_xh+","+url)
+				# by_tuhu_baoyang_data(url)
+
+
+			if car_pl_one != None:
+				# 得到排量
+				car_pl(data,driver,car_lx_one,car_pic,car,car_xh)
+				# 跳回点击品牌车型
+				driver.find_element_by_css_selector("#div40 > div:nth-child(3) > div.CarHistoryTitleDel").click()
+				time.sleep(1)
 			
 
 def car_baoyang(char,driver):
@@ -97,18 +116,19 @@ def car_baoyang(char,driver):
 	letter = data.select("#div2 > li:nth-child("+str(char)+")")[0].getText()
 	print(letter+"字母下车数量:::"+str(lengh_car))
 
-	for i in range(1,lengh_car+1):
+	# for i in range(7,8):
+	for i in range(7,lengh_car+1):
 		# 车logo
 		car_pic = data.select("#CarBrands > ul > li:nth-child("+str(i)+") > img")[0].get("src")
-		print(car_pic)
+		# print(car_pic)
 		# 车品牌
 		car = data.select("#CarBrands > ul > li:nth-child("+str(i)+")")[0].getText()
-		print(car)
+		# print(car)
 		# 点击各品牌车
 		driver.find_element_by_css_selector("#CarBrands > ul > li:nth-child("+str(i)+")").click()
 		data = data_(driver)
 		# 获取品牌车型号
-		car_lx(data,driver,car_pic,car)
+		car_lx(char,i,data,driver,car_pic,car)
 
 		# 跳回点击各品牌车
 		driver.find_element_by_css_selector("#div40 > div.CarHistoryTitlediv > div.CarHistoryTitleDel").click()
@@ -122,13 +142,19 @@ def by_tuhu_baoyang():
 	driver.find_element_by_id("reSelectCar").click()
 	time.sleep(2)
 
-	for char in range(2,3):
+	for char in range(3,4):
 		car_baoyang(char,driver)
 
 
 by_tuhu_baoyang()
 
 
+# 控制car
+for i in range(7,8):
+# for i in range(7,lengh_car+1):
+# 控制型号
+if x.get("data-id") != None and i > 17:
+# if x.get("data-id") != None:
 
 # 三级目录为None时Bug优化
 car_pailiang = data.select("#div5 > ul > li")
@@ -142,6 +168,8 @@ if car_pl_one == None:
 	time.sleep(2)
 	driver.find_element_by_css_selector("#CarBrands > ul > li:nth-child("+str(count)+")").click()
 	time.sleep(1)
+	url = "https://by.tuhu.cn/baoyang/"+car_lx_one+"/pl-n.html"
+	print(car_pic+","+car+","+car_xh+","+url)
 
 if car_pl_one != None:
 	# 得到排量
