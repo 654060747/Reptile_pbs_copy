@@ -14,60 +14,73 @@ def select_css(count,data,css,title):
 
 
 def data_(driver):
-	time.sleep(1.5)
+	time.sleep(5)
 	html = driver.page_source 
 	data = str(pq(html))  
 	data = BeautifulSoup(data,"lxml")
 	data.encoding = 'utf-8'
 	return data
 
-def find_result_data(driver,j,css_,data,by_lx,by_son):
-	# 拿到项目名
-	css = css_+"tr:nth-child("+str(j)+") > td:nth-child(1) > p"
-	by_name = select_css(2,data,css,'')
-	# print(by_name)
-	# 拿到每个项目下的内容数
+
+def tuhu_data_(string_buffer,driver,data,by_lx,by_son,by_name):
+	# 得到产品列表
+	css = "#changeProductList > div"
+	div_list_ = select_css(1,data,css,'')
+	# 右边列数
+	for m in range(2,len(div_list_)+1):
+		# print("xxxxxxxxxxxxxxxxxx"+str(m))
+		css_ = "#changeProductList > div:nth-child("+str(m)+") >"
+		css = "a.img"
+		# 拿到产品链接
+		product_url = select_css(3,data,css,'href')
+		print("产品链接:::"+product_url)
+		# 拿到产品图片
+		css = css_+"a:nth-child(1) > img"
+		product_pic = select_css(3,data,css,'src')
+		print("产品图片:::"+product_pic)
+		# 拿到列表内容
+		css = css_+"a:nth-child(2) > span.productTitle"
+		product_content = select_css(2,data,css,'')
+		print("产品介绍:::"+product_content)
+		# 拿到规格
+		try:
+			css = css_+"a:nth-child(2) > span.itemTag.qianscp"
+			product_spec = select_css(2,data,css,'')
+		except Exception:
+			product_spec = " "
+		print("产品规格:::"+product_spec)
+		# 拿到列表价格
+		css = css_+"div"
+		product_price = select_css(2,data,css,'')
+		print("产品价格:::"+product_price)
+
+		string_buffer = string_buffer + product_url +","+ product_pic +","+ product_content +","+ product_spec + ","+ product_price + ";"
+		# print(string_buffer)
+		time.sleep(0.5)
+		print("======"+by_name+","+product_url+","+product_pic+","+product_content+","+product_spec+","+product_price)
+	# 查看有没有下一页数据
+	css = "#changeList > div.tabcon.UnSelect > div:nth-child(2)"
+	next_title = select_css(3,data,css,"class")
+	print(next_title)
+	if "active" in next_title:
+		driver.find_element_by_css_selector("#changeList > div.tabcon.UnSelect > div.next.active").click()
+		data = data_(driver)
+		# 有下一页递归自己取数据
+		tuhu_data_(string_buffer,driver,data,by_lx,by_son,by_name)
+	# print(by_lx+","+by_son+","+by_name+","+string_buffer)
+
+
+def find_result_data(driver,j,css_,data,by_lx,by_son,by_name):
 	string_buffer = ''
 	css = css_+"tr:nth-child("+str(j)+") > td:nth-child(2) > div"
 	div_list = select_css(1,data,css,'')
+	# 左边列数
 	for z in range(1,len(div_list)+1):
 		# 点击内容列
 		css = css_+"tr:nth-child("+str(j)+") > td:nth-child(2) > div:nth-child("+str(z)+")"
 		driver.find_element_by_css_selector(css).click()
 		data = data_(driver)
-		time.sleep(2)
-		# 得到产品列表
-		css = "#changeProductList > div"
-		div_list_ = select_css(1,data,css,'')
-		print(len(div_list_))
-		for m in range(2,len(div_list_)+1):
-			
-			css_ = "#changeProductList > div:nth-child("+str(m)+") >"
-			# 拿到产品链接
-			css = css_+"a.name"
-			product_url = select_css(3,data,css,"href")
-			print(product_url)
-		# 	time.sleep(1)
-	# 		# 拿到产品图片
-	# 		css = css_+"a:nth-child(1) > img"
-	# 		product_pic = select_css(3,data,css,'src')
-	# 		# 拿到列表内容
-	# 		css = css_+"a:nth-child(2) > span.productTitle"
-	# 		product_content = select_css(2,data,css,'')
-	# 		# 拿到规格
-	# 		css = css_+"a:nth-child(2) > span.itemTag.qianscp"
-	# 		product_spec = select_css(2,data,css,'')
-	# 		print(product_spec)
-	# 		if product_spec == None:
-	# 			product_spec = " "
-	# 		# 拿到列表价格
-	# 		css = "div"
-	# 		product_price = select_css(2,data,css,'')
-
-
-	# 		string_buffer = string_buffer + product_url +","+ product_pic +","+ product_content +","+ product_spec + ","+ product_price + ";"
-
-	# print(by_lx+","+by_son+","+by_name+","+string_buffer)
+		tuhu_data_(string_buffer,driver,data,by_lx,by_son,by_name)
 
 
 def by_lx_open(driver,data,baoyang_dict):
@@ -87,8 +100,16 @@ def by_lx_open(driver,data,baoyang_dict):
 		css = css_+"tr"
 		tr_list = select_css(1,data,css,'')
 		for j in range(1,len(tr_list)+1):
+			# 拿到项目名
+			css = css_+"tr:nth-child("+str(j)+") > td:nth-child(1) > p"
+			by_name = select_css(2,data,css,'')
+			print(by_name)
 			# 取数据
-			find_result_data(driver,j,css_,data,by_lx,by_son)
+			if "火花塞" in by_name:
+				find_result_data(driver,j,css_,data,by_lx,by_son,by_name)
+
+			if "滤清器" in by_name:
+				find_result_data(driver,j,css_,data,by_lx,by_son,by_name)
 			
 
 def by_list(data,driver,url_one):
@@ -119,7 +140,6 @@ def by_list(data,driver,url_one):
 				driver.find_element_by_css_selector(css).click()
 			if "火花塞" in baoyang_text:
 				driver.find_element_by_css_selector(css).click()
-			
 
 	# print(baoyang_dict)
 	# 数据更新到最新
@@ -135,7 +155,7 @@ def by_tuhu_baoyang_data(url_one):
 	by_list(data,driver,url_one)
 
 
-url = ["https://by.tuhu.cn/baoyang/VE-ZAR-Giulia/pl4.0T-n2019.html","https://by.tuhu.cn/baoyang/VE-ZAR-Giulia/pl2.0T-n2019.html","https://by.tuhu.cn/baoyang/VE-GM-S07BTHRV/pl1.6L-n2012.html","https://by.tuhu.cn/baoyang/VE-ZAR-Giulia/pl3.0T-n2019.html","https://by.tuhu.cn/baoyang/VE-McLaren540C/pl3.8T-n2019.html"]	
+url = ["https://by.tuhu.cn/baoyang/VE-HODO07AK/pl1.5T-n2018.html"]	
 
 for url_one in url:
 	by_tuhu_baoyang_data(url_one)
