@@ -1,4 +1,4 @@
-# conding=utf-8
+# coding=utf-8
 import time,os,random
 from random import choice
 from selenium import webdriver
