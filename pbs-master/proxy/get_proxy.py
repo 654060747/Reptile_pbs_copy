@@ -1,13 +1,26 @@
-__author__ = 'changchang.cc'
+__author__ = 'llg.cc'
 # -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
 import requests
 import http.client
 import threading
+from random import choice
 
-#手动创建好这两个文件，直接运行此脚本
-inFile = open('proxy.txt')#此文件存放所有代理ip
-outFile = open('verified.txt', 'w')#此文件存放有效的代理ip
+
+# 代理ip(使用代理配置)
+# proxys = ["111.11.100.13:8060","45.221.77.82:8080","112.109.198.106:3128","60.9.1.80:80","47.106.216.42:8000","116.196.115.209:8080"]
+# #1.使用python random模块的choice方法随机选择某个元素
+# proxy = choice(proxys)
+
+# proxy_d = "http://"+proxy
+
+# proxies = {
+#     "http":proxy_d
+# }
+
+
+inFile = open('proxy.txt')
+outFile = open('verified.txt', 'w')
 lock = threading.Lock()
 
 def getProxyList(targeturl="http://www.xicidaili.com/nn/"):
@@ -19,31 +32,35 @@ def getProxyList(targeturl="http://www.xicidaili.com/nn/"):
     for page in range(1, 10):
         url = targeturl + str(page)
         #print url
+        # 使用代理
+        # req = requests.get(url, proxies=proxies, headers=requestHeader)
+        # 不使用代理
         req = requests.get(url, headers=requestHeader)
         html_doc = req.text
     
         soup = BeautifulSoup(html_doc, "html.parser")
         #print soup
         trs = soup.find('table', id='ip_list').find_all('tr')
-        for tr in trs[1:]:
-            tds = tr.find_all('td')
-            #国家
-            if tds[0].find('img') is None :
-                nation = '未知'
-                locate = '未知'
-            else:
-                nation =   tds[0].find('img')['alt'].strip()
-                locate  =   tds[3].text.strip()
-            ip      =   tds[1].text.strip()
-            port    =   tds[2].text.strip()
-            anony   =   tds[4].text.strip()
-            protocol=   tds[5].text.strip()
-            speed   =   tds[6].find('div')['title'].strip()
-            time    =   tds[8].text.strip()
-            
-            proxyFile.write('%s|%s|%s|%s|%s|%s|%s|%s\n' % (nation, ip, port, locate, anony, protocol,speed, time) )
-            print ('%s=%s:%s' % (protocol, ip, port))
-            countNum += 1
+        if trs != None:
+            for tr in trs[1:]:
+                tds = tr.find_all('td')
+                #国家
+                if tds[0].find('img') is None :
+                    nation = '未知'
+                    locate = '未知'
+                else:
+                    nation =   tds[0].find('img')['alt'].strip()
+                    locate  =   tds[3].text.strip()
+                ip      =   tds[1].text.strip()
+                port    =   tds[2].text.strip()
+                anony   =   tds[4].text.strip()
+                protocol=   tds[5].text.strip()
+                speed   =   tds[6].find('div')['title'].strip()
+                time    =   tds[8].text.strip()
+                
+                proxyFile.write('%s|%s|%s|%s|%s|%s|%s|%s\n' % (nation, ip, port, locate, anony, protocol,speed, time) )
+                print ('%s=%s:%s' % (protocol, ip, port))
+                countNum += 1
     
     proxyFile.close()
     return countNum
@@ -71,7 +88,7 @@ def verifyProxyList():
             res = conn.getresponse()
             lock.acquire()
             print ("+++Success:" + ip + ":" + port)
-            outFile.write(ll + "\n")
+            outFile.write(protocol+"://"+ip + ":" + port + "\n")
             lock.release()
         except:
             print ("---Failure:" + ip + ":" + port)
@@ -94,7 +111,7 @@ if __name__ == '__main__':
     print (u"\n验证代理的有效性：")
     
     all_thread = []
-    for i in range(30):
+    for i in range(50):
         t = threading.Thread(target=verifyProxyList)
         all_thread.append(t)
         t.start()
