@@ -42,11 +42,18 @@ class bilibili():
         temp = json.loads(result)
         # #temp['durl']是一个列表，里面有很多字典
         #video_url = temp['durl']
-        for item in temp['data']['durl']:
-            if 'url' in item.keys():
-                video_url = item['url']
+        
+        if 'durl' in temp['data'].keys():
+            for item in temp['data']['durl']:
+                if 'url' in item.keys():
+                    video_url = item['url']
+        elif 'dash' in temp['data'].keys():
+             for item in temp['data']['dash']:
+                if 'base_url' in item.keys():
+                    video_url = item['base_url']
+
         print(video_url)
-        return video_url
+        # return video_url
 
 
     def download_video(self,video_url,file_name):      
@@ -67,8 +74,8 @@ class bilibili():
         #                     f.write(chunk)
 
     def run(self,url,file_name):
-        self.download_video(self.parseHtml(self.getHtml(url)),file_name)
-        # print(self.parseHtml(self.getHtml(url)))
+        # self.download_video(self.parseHtml(self.getHtml(url)),file_name)
+        self.parseHtml(self.getHtml(url))
 
 
     def red_csv(self,csv_path):
