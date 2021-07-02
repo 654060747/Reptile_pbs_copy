@@ -76,7 +76,7 @@ class CrackGeetest():
         bg_info = self.browser.execute_script(bg_js)  # 执行js文件得到带图片信息的图片数据
         bg_base64 = bg_info.split(',')[1]  # 拿到base64编码的图片信息
         bg_bytes = base64.b64decode(bg_base64)  # 转为bytes类型
-        bg_image = Image.open(BytesIO(bg_bytes)).convert('RGBA') # image读取图片信息
+        bg_image = Image.open(BytesIO(bg_bytes)).convert('RGBA') # image读取图片信息 RGBA四通道读图分别为 r g b 透明度
         # bg_image.show()
 
         # time.sleep(5)
@@ -102,9 +102,11 @@ class CrackGeetest():
                 res1 = abs(rgb1[0] - rgb2[0])
                 res2 = abs(rgb1[1] - rgb2[1])
                 res3 = abs(rgb1[2] - rgb2[2])
+                # 第四通道透明度计算值
                 res4 = abs(rgb1[3] - rgb2[3])
                 # 如果rgb差值大于self.threshold，滑动的距离会等于i-误差
                 if not (res1 < self.threshold and res2 < self.threshold and res3 < self.threshold and res4 < self.threshold):
+                    # 这里误差值计算
                     distance = i - self.deviation
                     # distance = i
                     return distance
