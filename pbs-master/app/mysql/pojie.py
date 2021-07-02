@@ -188,8 +188,6 @@ class CrackGeetest():
 
 if __name__ == '__main__':
     url = 'https://www.geetest.com/demo/slide-popup.html'
-    left = 57  # 起始位置
-    # deviation = 3  # 偏移量，误差
     str_xpath = '//*[@id="captcha"]/div[3]/div[2]/div[1]/div[3]'
     Crack = CrackGeetest(url, proxy='http://xxx', str_xpath=str_xpath)
     Crack.crack()
